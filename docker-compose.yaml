@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  postgres-db:
+    image: postgres:16
+    container_name: postgres-cloco
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+volumes:
+  pg-data:
