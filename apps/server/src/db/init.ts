@@ -1,6 +1,5 @@
 import * as pg from "pg";
 import { dbConfig } from "src/config/db.config";
-const { Client } = pg;
 
 const genderEnumQuery = `CREATE TYPE gender_enum AS ENUM('m','f','o')`;
 const genreEnumQuery = `CREATE TYPE genre_enum AS ENUM('rnb','country','classic','rock','jazz')`;
@@ -41,20 +40,26 @@ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )`;
 
+const { Pool } = pg;
+const pool = new Pool(dbConfig);
+
 async function initializeDb() {
+  const client = await pool.connect();
   try {
+    await client.query("BEGIN");
     console.log("Initializin database");
-    const client = new Client(dbConfig);
-    await client.connect();
     await client.query(genreEnumQuery);
     await client.query(genderEnumQuery);
     await client.query(createUserTableQuery);
     await client.query(createArtistTableQuery);
     await client.query(createMusicTableQuery);
-    await client.end();
+    await client.query("COMMIT");
     console.log("Finished initializing database");
   } catch (err) {
     console.log(`Error while initializing database, ${err.message}`);
+    await client.query("ROLLBACK");
+  } finally {
+    client.release();
     process.exit();
   }
 }
