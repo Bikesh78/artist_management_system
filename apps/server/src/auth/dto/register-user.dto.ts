@@ -1,30 +1,44 @@
-import { IsEmail, IsNotEmpty, IsOptional, MaxLength, MinLength } from "class-validator";
-// import {GenderEnum} from "@libs/models"
+import { GenderEnum } from "@libs/types";
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  MaxLength,
+  MinLength,
+} from "class-validator";
 
 export class RegisterUserDto {
   @IsNotEmpty()
-  first_name: string;
+  readonly first_name: string;
 
   @IsNotEmpty()
-  last_name: string;
+  readonly last_name: string;
 
   @IsNotEmpty()
   @IsEmail()
-  email: string;
+  readonly email: string;
 
   @IsNotEmpty()
   @MinLength(6)
   @MaxLength(20)
-  password: string;
+  readonly password: string;
+
+  @IsNotEmpty()
+  @MinLength(6)
+  @MaxLength(20)
+  readonly confirm_password: string;
 
   @IsOptional()
-  phone: string;
+  readonly phone: string;
 
   @IsOptional()
-  dob: Date;
-  
+  readonly dob: Date;
 
-  // @IsOptional()
-  // gender: GenderEnum
+  @IsOptional()
+  @IsEnum(GenderEnum)
+  readonly gender: GenderEnum;
 
+  @IsOptional()
+  readonly address: string;
 }

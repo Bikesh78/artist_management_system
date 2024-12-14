@@ -3,4 +3,4 @@ import { dbConfig } from "src/config/db.config";
 
 const { Pool } = pg;
 
-export const pool = new Pool(dbConfig);
+export const dbPool = new Pool(dbConfig);

@@ -6,7 +6,7 @@ const genreEnumQuery = `CREATE TYPE genre_enum AS ENUM('rnb','country','classic'
 
 const createUserTableQuery = `CREATE TABLE IF NOT EXISTS "user"(
 id SERIAL PRIMARY KEY,
-fist_name VARCHAR(255) NOT NULL,
+first_name VARCHAR(255) NOT NULL,
 last_name VARCHAR(255) NOT NULL,
 email VARCHAR(255) UNIQUE NOT NULL,
 password VARCHAR(500) NOT NULL,
