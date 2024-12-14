@@ -15,7 +15,7 @@ export class AuthService {
   constructor(
     private authRepository: AuthRepository,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async registerUser(body: RegisterUserDto) {
     const { password, confirm_password } = body;
