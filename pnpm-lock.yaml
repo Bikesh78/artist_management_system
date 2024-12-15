@@ -20,6 +20,9 @@ importers:
       '@emotion/styled':
         specifier: ^11.14.0
         version: 11.14.0(@emotion/react@11.14.0)(@types/react@18.3.16)(react@18.3.1)
+      '@hookform/resolvers':
+        specifier: ^3.9.1
+        version: 3.9.1(react-hook-form@7.54.1)
       '@mui/icons-material':
         specifier: ^6.2.0
         version: 6.2.0(@mui/material@6.2.0)(@types/react@18.3.16)(react@18.3.1)
@@ -1029,6 +1032,14 @@ packages:
     dependencies:
       levn: 0.4.1
     dev: true
+
+  /@hookform/resolvers@3.9.1(react-hook-form@7.54.1):
+    resolution: {integrity: sha512-ud2HqmGBM0P0IABqoskKWI6PEf6ZDDBZkFqe2Vnl+mTHCEHzr3ISjjZyCwTjC/qpL25JC9aIDkloQejvMeq0ug==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.54.1(react@18.3.1)
+    dev: false
 
   /@humanfs/core@0.19.1:
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}

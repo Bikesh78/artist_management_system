@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router";
-import { Login } from "../pages";
-import ProtectedRoutes from "../pages/login/protected-routes";
+import { Login, PageNotFound } from "../pages";
+import ProtectedRoutes from "./protected-routes";
 
 const RouteList = () => {
   return (
@@ -8,6 +8,7 @@ const RouteList = () => {
       <Routes>
         <Route path="/" element={<ProtectedRoutes />}></Route>
         <Route path="/login" element={<Login />} />
+      <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
   );
