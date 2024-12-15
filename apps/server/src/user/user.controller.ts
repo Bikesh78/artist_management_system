@@ -15,7 +15,7 @@ import { PageOptionsDto } from "src/common/pagination/page-options.dto";
 
 @Controller("user")
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Get()
   getPaginatedUsers(@Query() pageOptionsDto: PageOptionsDto) {
@@ -31,7 +31,6 @@ export class UserController {
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);
   }
-
 
   @Patch(":id")
   update(@Param("id") id: number, @Body() updateUserDto: UpdateUserDto) {

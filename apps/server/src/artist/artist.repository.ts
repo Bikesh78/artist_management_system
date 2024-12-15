@@ -1,30 +1,65 @@
-import { IUser } from "@libs/types";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PageMetaDto } from "src/common/pagination/page-meta.dto";
-import { PageOptionsDto } from "src/common/pagination/page-options.dto";
-import { PageDto } from "src/common/pagination/page.dto";
+import { CreateArtistDto } from "./dto/create-artist.dto";
 import { dbPool } from "src/db/db-pool";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
+import { PageOptionsDto } from "src/common/pagination/page-options.dto";
+import { IArtist } from "@libs/types";
+import { PageMetaDto } from "src/common/pagination/page-meta.dto";
+import { PageDto } from "src/common/pagination/page.dto";
+import { UpdateArtistDto } from "./dto/update-artist.dto";
 
 @Injectable()
-export class UserRepository {
+export class ArtistRepository {
   private pool = dbPool;
+  async create(body: CreateArtistDto) {
+    const client = await this.pool.connect();
+    try {
+      const {
+        name,
+        dob,
+        gender,
+        address,
+        first_release_year,
+        no_of_albums_released,
+      } = body;
 
-  async getPaginatedUsers(pageOptionsDto: PageOptionsDto) {
+      const queryText = `
+            INSERT INTO artist
+            (name, dob, gender, address, first_release_year, no_of_albums_released)
+            VALUES($1,$2,$3,$4,$5,$6)
+            RETURNING *
+          `;
+      const values = [
+        name,
+        dob,
+        gender,
+        address,
+        first_release_year,
+        no_of_albums_released,
+      ];
+
+      const res = await client.query<IArtist>(queryText, values);
+      return res.rows[0];
+    } catch (err) {
+      throw new InternalServerErrorException(err.message);
+    } finally {
+      client.release();
+    }
+  }
+
+  async getPaginatedArtists(pageOptionsDto: PageOptionsDto) {
     const client = await this.pool.connect();
     const { offset, limit } = pageOptionsDto;
     try {
       const queryText = `
-      SELECT id, first_name, last_name, email, phone, dob, gender, address, created_at, updated_at 
-      FROM "user"
+      SELECT  *
+      FROM artist
       LIMIT $1
       OFFSET $2
       `;
       const values = [limit, offset];
-      const res = await client.query<IUser>(queryText, values);
+      const res = await client.query<IArtist>(queryText, values);
       const count = await client.query<{ count: string }>(
-        `select count(*) from "user"`,
+        `SELECT COUNT(*) FROM artist`,
       );
 
       const itemCount = Number(count.rows[0].count);
@@ -38,15 +73,15 @@ export class UserRepository {
     }
   }
 
-  async findUserById(id: number) {
+  async findArtistById(id: number) {
     const client = await this.pool.connect();
     try {
       const queryText = `
-      SELECT id, first_name, last_name, email, phone, dob, gender, address, created_at, updated_at 
-      FROM "user" 
+      SELECT *
+      FROM artist 
       WHERE id = $1
     `;
-      const res = await client.query<IUser>(queryText, [id]);
+      const res = await client.query<IArtist>(queryText, [id]);
       if (res.rowCount === 0) {
         return null;
       }
@@ -58,54 +93,10 @@ export class UserRepository {
     }
   }
 
-  async createUser(body: CreateUserDto) {
+  async updateArtist(id: number, body: UpdateArtistDto) {
     const client = await this.pool.connect();
     try {
-      const {
-        first_name,
-        last_name,
-        email,
-        password,
-        dob,
-        phone,
-        gender,
-        address,
-      } = body;
-
-      const queryText = `
-            INSERT INTO "user"
-            (first_name, last_name,email, password, dob, phone, gender, address)
-            VALUES($1,$2,$3,$4,$5,$6,$7,$8)
-            RETURNING *
-          `;
-      const values = [
-        first_name,
-        last_name,
-        email,
-        password,
-        dob,
-        phone,
-        gender,
-        address,
-      ];
-
-      const res = await client.query<IUser & { password: string }>(
-        queryText,
-        values,
-      );
-      delete res.rows[0].password;
-      return res.rows[0];
-    } catch (err) {
-      throw new InternalServerErrorException(err.message);
-    } finally {
-      client.release();
-    }
-  }
-
-  async updateUser(id: number, body: UpdateUserDto) {
-    const client = await this.pool.connect();
-    try {
-      let queryText = `UPDATE "user" SET`;
+      let queryText = `UPDATE artist SET`;
       let values = [];
 
       Object.entries(body).forEach(([key, value], index) => {
@@ -121,7 +112,7 @@ export class UserRepository {
       WHERE id = $${values.length} 
       RETURNING *
       `;
-      const res = await client.query<IUser>(queryText, values);
+      const res = await client.query<IArtist>(queryText, values);
       return res.rows[0];
     } catch (err) {
       throw new InternalServerErrorException(err.message);
@@ -130,10 +121,10 @@ export class UserRepository {
     }
   }
 
-  async deleteUser(id: number) {
+  async deleteArtist(id: number) {
     const client = await this.pool.connect();
     try {
-      const queryText = `DELETE FROM "user" where id = $1`;
+      const queryText = `DELETE FROM artist where id = $1`;
       const value = [id];
       await client.query(queryText, value);
     } catch (err) {

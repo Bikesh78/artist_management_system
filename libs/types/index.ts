@@ -1,3 +1,5 @@
+import { NumberLiteralType, StringLiteralLike } from "typescript";
+
 export enum GenderEnum {
   m = "m",
   f = "f",
@@ -5,11 +7,11 @@ export enum GenderEnum {
 }
 
 export enum GenreEnum {
-  rnb = 'rnb',
-  country = 'country',
-  classic = 'classic',
-  rock = 'rock',
-  jazz = 'jazz'
+  rnb = "rnb",
+  country = "country",
+  classic = "classic",
+  rock = "rock",
+  jazz = "jazz",
 }
 
 export interface IUser {
@@ -23,3 +25,12 @@ export interface IUser {
   address: string;
 }
 
+export interface IArtist {
+  id: number;
+  name: string;
+  dob: Date;
+  gender: GenderEnum;
+  address: string;
+  first_release_year: string;
+  no_of_albums_released: number;
+}
