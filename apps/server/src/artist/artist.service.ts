@@ -25,16 +25,16 @@ export class ArtistService {
   }
 
   async update(id: number, body: UpdateArtistDto) {
-    const user = await this.artistRepository.findArtistById(id);
-    if (!user) {
+    const artist = await this.artistRepository.findArtistById(id);
+    if (!artist) {
       throw new NotFoundException("Artist not found");
     }
     return await this.artistRepository.updateArtist(id, body);
   }
 
   async remove(id: number) {
-    const user = await this.artistRepository.findArtistById(id);
-    if (!user) {
+    const artist = await this.artistRepository.findArtistById(id);
+    if (!artist) {
       throw new BadRequestException("Artist not found");
     }
     return await this.artistRepository.deleteArtist(id);

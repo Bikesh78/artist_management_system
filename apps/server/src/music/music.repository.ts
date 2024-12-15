@@ -1,44 +1,30 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { CreateArtistDto } from "./dto/create-artist.dto";
+import { CreateMusicDto } from "./dto/create-music.dto";
+import { UpdateMusicDto } from "./dto/update-music.dto";
 import { dbPool } from "src/db/db-pool";
+import { IMusic } from "@libs/types";
 import { PageOptionsDto } from "src/common/pagination/page-options.dto";
-import { IArtist } from "@libs/types";
 import { PageMetaDto } from "src/common/pagination/page-meta.dto";
 import { PageDto } from "src/common/pagination/page.dto";
-import { UpdateArtistDto } from "./dto/update-artist.dto";
 
 @Injectable()
-export class ArtistRepository {
+export class MusicRepository {
   private pool = dbPool;
 
-  async create(body: CreateArtistDto) {
+  async create(body: CreateMusicDto) {
     const client = await this.pool.connect();
     try {
-      const {
-        name,
-        dob,
-        gender,
-        address,
-        first_release_year,
-        no_of_albums_released,
-      } = body;
+      const { title, album_name, genre, artist_id } = body;
 
       const queryText = `
-            INSERT INTO artist
-            (name, dob, gender, address, first_release_year, no_of_albums_released)
-            VALUES($1,$2,$3,$4,$5,$6)
+            INSERT INTO music
+            ( title, album_name, genre, artist_id )
+            VALUES($1,$2,$3,$4)
             RETURNING *
           `;
-      const values = [
-        name,
-        dob,
-        gender,
-        address,
-        first_release_year,
-        no_of_albums_released,
-      ];
+      const values = [title, album_name, genre, artist_id];
 
-      const res = await client.query<IArtist>(queryText, values);
+      const res = await client.query<IMusic>(queryText, values);
       return res.rows[0];
     } catch (err) {
       throw new InternalServerErrorException(err.message);
@@ -47,20 +33,20 @@ export class ArtistRepository {
     }
   }
 
-  async getPaginatedArtists(pageOptionsDto: PageOptionsDto) {
+  async getPaginatedMusic(pageOptionsDto: PageOptionsDto) {
     const client = await this.pool.connect();
     const { offset, limit } = pageOptionsDto;
     try {
       const queryText = `
       SELECT  *
-      FROM artist
+      FROM music
       LIMIT $1
       OFFSET $2
       `;
       const values = [limit, offset];
-      const res = await client.query<IArtist>(queryText, values);
+      const res = await client.query<IMusic>(queryText, values);
       const count = await client.query<{ count: string }>(
-        `SELECT COUNT(*) FROM artist`,
+        `SELECT COUNT(*) FROM music`,
       );
 
       const itemCount = Number(count.rows[0].count);
@@ -74,15 +60,15 @@ export class ArtistRepository {
     }
   }
 
-  async findArtistById(id: number) {
+  async findMusicById(id: number) {
     const client = await this.pool.connect();
     try {
       const queryText = `
       SELECT *
-      FROM artist 
+      FROM music 
       WHERE id = $1
     `;
-      const res = await client.query<IArtist>(queryText, [id]);
+      const res = await client.query<IMusic>(queryText, [id]);
       if (res.rowCount === 0) {
         return null;
       }
@@ -94,10 +80,10 @@ export class ArtistRepository {
     }
   }
 
-  async updateArtist(id: number, body: UpdateArtistDto) {
+  async updateMusic(id: number, body: UpdateMusicDto) {
     const client = await this.pool.connect();
     try {
-      let queryText = `UPDATE artist SET`;
+      let queryText = `UPDATE music SET`;
       let values = [];
 
       Object.entries(body).forEach(([key, value], index) => {
@@ -113,7 +99,7 @@ export class ArtistRepository {
       WHERE id = $${values.length} 
       RETURNING *
       `;
-      const res = await client.query<IArtist>(queryText, values);
+      const res = await client.query<IMusic>(queryText, values);
       return res.rows[0];
     } catch (err) {
       throw new InternalServerErrorException(err.message);
@@ -122,10 +108,10 @@ export class ArtistRepository {
     }
   }
 
-  async deleteArtist(id: number) {
+  async deleteMusic(id: number) {
     const client = await this.pool.connect();
     try {
-      const queryText = `DELETE FROM artist where id = $1`;
+      const queryText = `DELETE FROM music where id = $1`;
       const value = [id];
       await client.query(queryText, value);
     } catch (err) {
