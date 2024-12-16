@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router";
-import { Login, PageNotFound } from "../pages";
+import { DashboardPage, Login, PageNotFound, RegisterPage } from "src/pages";
 import ProtectedRoutes from "./protected-routes";
-import { DashboardPage } from "../pages/dashboard";
 
 const RouteList = () => {
   return (
@@ -11,6 +10,7 @@ const RouteList = () => {
           <Route path="/" element={<DashboardPage />} />
         </Route>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

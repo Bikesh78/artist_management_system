@@ -5,7 +5,7 @@ import { Control, Controller, FieldError } from "react-hook-form";
 interface InputProps {
   name: string;
   control: Control<any>;
-  type?: "number" | "string" | "password";
+  type?: "number" | "string" | "password" | "tel";
   error: FieldError | undefined;
   placeholder?: string;
   label?: string;

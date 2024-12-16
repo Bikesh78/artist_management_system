@@ -1,0 +1,72 @@
+import { Box, FormHelperText, InputLabel } from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { Control, Controller, FieldError } from "react-hook-form";
+import dayjs from "dayjs";
+
+interface Props {
+  name: string;
+  control: Control<any>;
+  type?: "number" | "string" | "password" | "tel";
+  error: FieldError | undefined;
+  label?: string;
+  title?: string;
+  disabled?: boolean;
+  required?: boolean;
+  classnames?: string;
+  disablePast?: boolean;
+  format?: string;
+}
+
+export const CustomDatePicker: React.FC<Props> = ({
+  label,
+  name,
+  control,
+  error,
+  classnames = "",
+  disablePast,
+  disabled,
+  format,
+}) => {
+  return (
+    <Box className={`${classnames} datepicker`}>
+      <Controller
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <>
+            {label && (
+              <InputLabel htmlFor={name} sx={{ marginBottom: "3px" }}>
+                {label}
+              </InputLabel>
+            )}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                {...field}
+                value={field.value ? dayjs(field.value) : undefined}
+                onChange={(date) => {
+                  field.onChange(
+                    format ? date?.format(format) : date?.format("MM-DD-YYYY"),
+                  );
+                }}
+                disablePast={disablePast ? true : false}
+                disabled={disabled}
+                sx={{".MuiInputAdornment-root":{height:"12px"}}}
+              />
+            </LocalizationProvider>
+          </>
+        )}
+      ></Controller>
+
+      {error?.message && (
+        <FormHelperText
+          error={true}
+          sx={{ color: "red !important", fontSize: "10px", marginTop: "5px" }}
+        >
+          {error?.message}
+        </FormHelperText>
+      )}
+    </Box>
+  );
+};

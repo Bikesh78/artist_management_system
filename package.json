@@ -7,6 +7,7 @@
     "dev:client": "pnpm --filter client dev",
     "dev:server": "pnpm --filter server start:dev",
     "dev": "pnpm run dev:client & pnpm run dev:server",
+    "build": "pnpm recursive run build",
     "db:init": "pnpm --filter server db:init"
   },
   "keywords": [],
