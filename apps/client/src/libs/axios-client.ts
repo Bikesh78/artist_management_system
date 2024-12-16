@@ -1,8 +1,8 @@
-import Axios, { InternalAxiosRequestConfig } from 'axios';
+import Axios, { InternalAxiosRequestConfig } from "axios";
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   if (config.headers) {
-    config.headers.Accept = 'application/json';
+    config.headers.Accept = "application/json";
   }
 
   config.withCredentials = true;
@@ -20,7 +20,7 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     const message = error.response?.data?.message || error.message;
-    console.log('error message', message)
+    console.log("error message", message);
 
     if (error.response?.status === 401) {
       window.location.href = "/login";

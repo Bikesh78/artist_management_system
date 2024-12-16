@@ -29,6 +29,9 @@ export const theme = createTheme({
 
   components: {
     MuiButton: {
+      defaultProps: {
+        disableRipple: true,
+      },
       styleOverrides: {
         root: {
           textTransform: "capitalize",

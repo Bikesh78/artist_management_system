@@ -47,6 +47,10 @@ export class AuthService {
     };
 
     const access_token = this.jwtService.sign(userPayload);
-    return { message: "Successfully logged in", ...userPayload, access_token };
+    return {
+      message: "Successfully logged in",
+      user: { ...userPayload },
+      access_token,
+    };
   }
 }

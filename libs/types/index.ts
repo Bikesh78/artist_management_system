@@ -40,3 +40,8 @@ export interface IMusic {
   genre: GenreEnum;
   artist_id: number;
 }
+
+export interface LoginResponse {
+  access_token: string;
+  user: Omit<IUser, "dob" | "phone" | "gender" | "address">;
+}

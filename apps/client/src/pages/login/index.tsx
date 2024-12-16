@@ -1,11 +1,19 @@
-import { Box, Button, CircularProgress, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Paper,
+  Typography,
+} from "@mui/material";
 import loginImage from "../../assets/login-image.jpg";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { CustomInput } from "../../components";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
+import { useLoginMutation } from "./api/useLoginMutation";
+import { AxiosError } from "axios";
+import { CustomInput, errorToast, infoToast } from "../../components/ui";
 
 const formSchema = z.object({
   email: z
@@ -19,7 +27,7 @@ const formSchema = z.object({
     .max(20, { message: "Password is too long" }),
 });
 
-type FormType = z.infer<typeof formSchema>;
+export type LoginType = z.infer<typeof formSchema>;
 
 const defaultValues = {
   email: "",
@@ -31,17 +39,36 @@ export const Login = () => {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<FormType>({
+  } = useForm<LoginType>({
     mode: "onBlur",
     defaultValues,
     resolver: zodResolver(formSchema),
   });
-  const isLoading = false;
   const navigate = useNavigate();
+  const { mutate: login, isPending } = useLoginMutation();
 
-  console.log("errors", errors);
-  const submitHandler = (data: FormType) => {
-    console.log("data", data);
+  const submitHandler = (data: LoginType) => {
+    login(data, {
+      onSuccess: (data) => {
+        localStorage.setItem(
+          "artist_access_token",
+          JSON.stringify(data.data.access_token),
+        );
+        localStorage.setItem(
+          "artist_mgmt_user",
+          JSON.stringify(data.data.user),
+        );
+        infoToast("Successfully logged in");
+        navigate("/");
+      },
+      onError: (err: Error | AxiosError<{ message: string }>) => {
+        if (err instanceof AxiosError) {
+          errorToast(err.response?.data?.message as string);
+          return;
+        }
+        errorToast(err.message);
+      },
+    });
   };
 
   return (
@@ -143,7 +170,7 @@ export const Login = () => {
                   type="submit"
                   sx={{ width: "100%", padding: "12px" }}
                 >
-                  {isLoading ? (
+                  {isPending ? (
                     <CircularProgress color="inherit" size={24} />
                   ) : (
                     "Sign In"
