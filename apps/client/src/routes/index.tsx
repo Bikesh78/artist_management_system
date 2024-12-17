@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router";
-import { DashboardPage, Login, PageNotFound, RegisterPage } from "src/pages";
+import { Login, PageNotFound, RegisterPage, UserPage } from "src/pages";
 import ProtectedRoutes from "./protected-routes";
 
 const RouteList = () => {
@@ -7,7 +7,7 @@ const RouteList = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<ProtectedRoutes />}>
-          <Route path="/" element={<DashboardPage />} />
+          <Route path="/" element={<UserPage />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />} />
