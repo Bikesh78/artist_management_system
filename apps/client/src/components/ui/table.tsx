@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { GridColDef } from "@mui/x-data-grid";
-import { Skeleton } from "@mui/material";
 
 type DataGridProps = {
   rows: any[];
@@ -12,10 +11,6 @@ type DataGridProps = {
   hidePagination?: boolean;
   apiRef?: any;
   isFetching?: boolean;
-};
-
-type LoaderProps = {
-  columns: GridColDef[];
 };
 
 export const CustomTable = ({
@@ -45,9 +40,6 @@ export const CustomTable = ({
         "& .MuiDataGrid-overlayWrapper": {
           minHeight: isFetching ? "" : "450px",
         },
-        "& .MuiDataGrid-iconButtonContainer ": {
-          display: "none",
-        },
         "& .MuiDataGrid-columnHeaders": {
           borderBlock: "1px solid #9D9CAF !important",
           borderRadius: "0px",
@@ -61,16 +53,6 @@ export const CustomTable = ({
         "& .MuiDataGrid-columnHeaderTitle": {
           fontWeight: "600",
         },
-        // "& .MuiDataGrid-menuIcon": {
-          // "& .MuiButtonBase-root": {
-          //   color: "white",
-          // },
-        // },
-        // "& .MuiDataGrid-iconButtonContainer": {
-        //   "& .MuiButtonBase-root": {
-        //     color: "white",
-        //   },
-        // },
         "& .MuiDataGrid-columnSeparator": {
           display: "none",
         },
@@ -106,6 +88,7 @@ export const CustomTable = ({
         onPaginationModelChange={setPaginationModel}
         rowCount={rowCount || 0}
         loading={isFetching}
+        disableColumnSorting
         disableRowSelectionOnClick
         filterMode="server"
         slots={{
@@ -126,18 +109,5 @@ export const CustomTable = ({
         }}
       />
     </Box>
-  );
-};
-
-export const DataGridLoader = ({ columns }: LoaderProps) => {
-  columns = columns.map((item) => {
-    return { ...item, renderCell: () => <Skeleton width="70%" /> };
-  });
-  const rows = [...Array(10)].map((item, index) => ({ id: index }));
-
-  return (
-    <>
-      <CustomTable columns={columns} rows={rows} />
-    </>
   );
 };

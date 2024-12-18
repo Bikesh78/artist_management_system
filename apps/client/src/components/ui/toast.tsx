@@ -4,6 +4,6 @@ export const errorToast = (message: string) => {
   toast.error(message, { theme: "colored", position: "bottom-left" });
 };
 
-export const infoToast = (message: string) => {
-  toast.info(message, { theme: "colored", position: "bottom-left" });
+export const successToast = (message: string) => {
+  toast.success(message, { theme: "colored", position: "bottom-left" });
 };

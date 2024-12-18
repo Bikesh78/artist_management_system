@@ -2,9 +2,9 @@ import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosResponse } from "axios";
 import { BASE_URL } from "src/libs/config";
 import { z } from "zod";
-import { AxiosError } from "axios";
 import { useNavigate } from "react-router";
-import { errorToast, infoToast } from "src/components/ui";
+import { errorToast, successToast } from "src/components/ui";
+import { ResponseError } from "@libs/types";
 
 export const registerSchema = z
   .object({
@@ -60,15 +60,11 @@ export const useRegisterMutation = () => {
       return axios.post(`${BASE_URL}/auth/register`, data);
     },
     onSuccess: () => {
-      infoToast("Registration successful");
+      successToast("Registration successful");
       navigate("/");
     },
-    onError: (err: Error | AxiosError<{ message: string }>) => {
-      if (err instanceof AxiosError) {
-        errorToast(err.response?.data?.message as string);
-        return;
-      }
-      errorToast(err.message);
+    onError: (err: ResponseError) => {
+      errorToast(err.response?.data?.message || err.message);
     },
   });
 };

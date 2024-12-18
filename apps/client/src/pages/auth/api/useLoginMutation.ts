@@ -1,11 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosResponse } from "axios";
-import { LoginResponse } from "@libs/types";
+import { LoginResponse, ResponseError } from "@libs/types";
 import { z } from "zod";
 import { BASE_URL } from "src/libs/config";
 import { useNavigate } from "react-router";
-import { AxiosError } from "axios";
-import { errorToast, infoToast } from "src/components/ui";
+import { errorToast, successToast } from "src/components/ui";
 
 export const loginSchema = z.object({
   email: z
@@ -39,15 +38,11 @@ export const useLoginMutation = () => {
         JSON.stringify(data.data.access_token),
       );
       localStorage.setItem("artist_mgmt_user", JSON.stringify(data.data.user));
-      infoToast("Successfully logged in");
+      successToast("Successfully logged in");
       navigate("/");
     },
-    onError: (err: Error | AxiosError<{ message: string }>) => {
-      if (err instanceof AxiosError) {
-        errorToast(err.response?.data?.message as string);
-        return;
-      }
-      errorToast(err.message);
+    onError: (err: ResponseError) => {
+      errorToast(err.response?.data?.message || err.message);
     },
   });
 };

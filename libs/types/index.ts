@@ -45,3 +45,29 @@ export interface LoginResponse {
   access_token: string;
   user: Omit<IUser, "dob" | "phone" | "gender" | "address">;
 }
+
+interface Meta {
+  page: number;
+  limit: number;
+  itemCount: number;
+  pageCount: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface PaginatedResponse<T> {
+  data: T;
+  meta: Meta;
+}
+
+export interface ResponseError {
+  name: string;
+  status?: number;
+  message: string;
+  response?: {
+    data: {
+      message: string;
+      status: number;
+    };
+  };
+}

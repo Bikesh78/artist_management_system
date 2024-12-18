@@ -2,10 +2,13 @@ import Axios, { InternalAxiosRequestConfig } from "axios";
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   if (config.headers) {
+    const token = JSON.parse(
+      localStorage.getItem("artist_access_token") as string,
+    );
+    config.headers.Authorization = `Bearer ${token}`;
     config.headers.Accept = "application/json";
   }
 
-  config.withCredentials = true;
   return config;
 }
 
@@ -16,7 +19,7 @@ export const axiosInstance = Axios.create({
 axiosInstance.interceptors.request.use(authRequestInterceptor);
 axiosInstance.interceptors.response.use(
   (response) => {
-    return response.data;
+    return response;
   },
   (error) => {
     const message = error.response?.data?.message || error.message;
