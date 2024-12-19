@@ -18,6 +18,7 @@ export class UserRepository {
       const queryText = `
       SELECT id, first_name, last_name, email, phone, dob, gender, address, created_at, updated_at 
       FROM "user"
+      ORDER BY created_at DESC
       LIMIT $1
       OFFSET $2
       `;

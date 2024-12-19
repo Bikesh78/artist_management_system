@@ -183,6 +183,7 @@ export const RegisterPage = () => {
               label={"Date of Birth"}
               error={errors?.dob}
               format="YYYY-MM-DD"
+              required
             />
           </Box>
 

@@ -7,7 +7,7 @@ import { z } from "zod";
 
 export const createUserSchema = z
   .object({
-    first_name: z.string().nonempty({ message: "First name is required" }),
+    first_name: z.string().default(''),
     last_name: z.string().nonempty({ message: "Last name is required" }),
     email: z
       .string()
@@ -38,6 +38,11 @@ export const createUserSchema = z
     }
   });
 
+  // export const eeee = z.object({
+  //   name:z.string().default('').nonempty({ message: "First name is required" })
+  //
+  // })
+
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 
 export const defaultCreateUserFields = {
@@ -57,7 +62,7 @@ export const useCreateUser = () => {
 
   return useMutation({
     mutationFn: (data: CreateUserInput) => {
-      return axiosInstance.post(`${BASE_URL}`, data);
+      return axiosInstance.post(`${BASE_URL}/user`, data);
     },
     onSuccess: (data) => {
       console.log('data', data)

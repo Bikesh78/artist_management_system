@@ -28,6 +28,7 @@ export const CustomDatePicker: React.FC<Props> = ({
   disablePast,
   disabled,
   format,
+  required,
 }) => {
   return (
     <Box className={`${classnames} datepicker`}>
@@ -37,14 +38,19 @@ export const CustomDatePicker: React.FC<Props> = ({
         render={({ field }) => (
           <>
             {label && (
-              <InputLabel htmlFor={name} sx={{ marginBottom: "3px" }}>
-                {label}
-              </InputLabel>
+              <Box sx={{ display: "flex", columnGap: "0.1rem", mb: "3px" }}>
+                <InputLabel htmlFor={name} sx={{ marginBottom: "3px" }}>
+                  {label}
+                </InputLabel>
+                <InputLabel style={{ color: "red" }}>
+                  {required && " *"}
+                </InputLabel>
+              </Box>
             )}
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 {...field}
-                value={field.value ? dayjs(field.value) : undefined}
+                value={field.value ? dayjs(field.value) : null}
                 onChange={(date) => {
                   field.onChange(
                     format ? date?.format(format) : date?.format("MM-DD-YYYY"),
@@ -52,7 +58,7 @@ export const CustomDatePicker: React.FC<Props> = ({
                 }}
                 disablePast={disablePast ? true : false}
                 disabled={disabled}
-                sx={{".MuiInputAdornment-root":{height:"12px"}}}
+                sx={{ ".MuiInputAdornment-root": { height: "12px" } }}
               />
             </LocalizationProvider>
           </>

@@ -4,7 +4,11 @@ import { ActionButton } from "src/components/ui";
 import dayjs from "dayjs";
 import { IUser } from "@libs/types";
 
-export const useColumns = () => {
+interface Props {
+  handleEdit: (params: GridRenderCellParams<IUser, any>) => void;
+}
+
+export const useColumns = ({ handleEdit }: Props) => {
   const columns: GridColDef[] = useMemo(() => {
     return [
       {
@@ -65,7 +69,7 @@ export const useColumns = () => {
           return (
             <>
               <ActionButton
-                handleEdit={() => console.log(params?.row)}
+                handleEdit={() => handleEdit(params)}
                 handleDelete={() => console.log("deleteModal", params?.row)}
               />
             </>

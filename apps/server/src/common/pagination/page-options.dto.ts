@@ -1,4 +1,4 @@
-import { IsEnum, IsInt, IsOptional, Max, Min } from "class-validator";
+import { IsInt, IsOptional, Max, Min } from "class-validator";
 import { Type } from "class-transformer";
 
 export class PageOptionsDto {

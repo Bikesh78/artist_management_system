@@ -8,12 +8,14 @@ export const useFetchUsers = (page: number) => {
     queryKey: ["users", page],
     queryFn: async () => {
       try {
-        const { data } =
-          await axiosInstance.get<PaginatedResponse<IUser[]>>(`/user?page=${page}&limit=10`);
+        const { data } = await axiosInstance.get<PaginatedResponse<IUser[]>>(
+          `/user?page=${page}&limit=10`,
+        );
         return data;
       } catch (err: any) {
         errorToast(err?.response?.data?.message || err?.message);
       }
     },
+    placeholderData: (prev) => prev,
   });
 };
