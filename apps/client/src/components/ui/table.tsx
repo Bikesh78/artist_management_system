@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridEventListener, GridToolbar } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { GridColDef } from "@mui/x-data-grid";
 
@@ -11,6 +11,7 @@ type DataGridProps = {
   hidePagination?: boolean;
   apiRef?: any;
   isFetching?: boolean;
+  onRowClick?: GridEventListener<"rowClick"> | undefined;
 };
 
 export const CustomTable = ({
@@ -21,6 +22,7 @@ export const CustomTable = ({
   isFetching,
   hidePagination,
   apiRef,
+  onRowClick,
 }: DataGridProps) => {
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
@@ -56,24 +58,8 @@ export const CustomTable = ({
         "& .MuiDataGrid-columnSeparator": {
           display: "none",
         },
-        "& .MuiDataGrid-toolbarContainer": {
-          marginBlock: "10px",
-          "& .MuiInputBase-root": {
-            border: "1px solid rgba(0,0,0,0.23)",
-            borderRadius: "4px",
-            padding: "4px",
-            "&:before": {
-              borderBottom: "none !important",
-            },
-            "&:after": {
-              display: "none !important",
-            },
-            "&:hover": {
-              "&:before": {
-                borderBottom: "none !important",
-              },
-            },
-          },
+        "& .MuiDataGrid-row": {
+          cursor: onRowClick ? "pointer" : "initial",
         },
       }}
     >
@@ -107,6 +93,7 @@ export const CustomTable = ({
             quickFilterProps: { debounceMs: 500 },
           },
         }}
+        onRowClick={onRowClick}
       />
     </Box>
   );

@@ -1,52 +1,48 @@
 import { useState } from "react";
 import { CustomTable } from "src/components/ui";
-import { useFetchArtists } from "./api/fetch-artists";
+import { useFetchMusics } from "./api/fetch-music";
 import { useColumns } from "./columns";
 import { Box, Button } from "@mui/material";
-import { ActiveModal, IArtist } from "@libs/types";
-import { ArtistFormModal } from "./artist-form-modal";
+import { ActiveModal, IMusic } from "@libs/types";
+import { MusicFormModal } from "./music-form-modal";
 import { useForm } from "react-hook-form";
 import {
-  CreateArtistInput,
-  createArtistSchema,
-  defaultCreateArtistFields,
-} from "./api/create-artist";
+  CreateMusicInput,
+  createMusicSchema,
+  defaultCreateMusicFields,
+} from "./api/create-music";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GridRenderCellParams } from "@mui/x-data-grid";
-import { UpdateArtistInput, updateArtistSchema } from "./api/update-artist";
+import { UpdateMusicInput, updateMusicSchema } from "./api/update-music";
 import { ConfirmationModal } from "src/components/ui/confirmation-modal";
-import { useDeleteArtist } from "./api/delete-artist";
-import { useNavigate } from "react-router";
+import { useDeleteMusic } from "./api/delete-music";
 
-//TODO: add csv import and export
-export const ArtistPage = () => {
+export const MusicPage = () => {
   const [page, setPage] = useState(1);
-  const { data, isLoading } = useFetchArtists(page);
+  const { data, isLoading } = useFetchMusics(page);
   const [activeModal, setActiveModal] = useState<ActiveModal>("none");
-  const [modalData, setModalData] = useState<IArtist | null>(null);
+  const [modalData, setModalData] = useState<IMusic | null>(null);
   const isEditMode = activeModal === "edit";
-  const methods = useForm<CreateArtistInput | UpdateArtistInput>({
+  const methods = useForm<CreateMusicInput | UpdateMusicInput>({
     mode: "onBlur",
-    defaultValues: defaultCreateArtistFields,
-    resolver: zodResolver(isEditMode ? updateArtistSchema : createArtistSchema),
+    defaultValues: defaultCreateMusicFields,
+    resolver: zodResolver(isEditMode ? updateMusicSchema : createMusicSchema),
   });
-  const { mutate: deleteArtist, isPending: isDeleting } = useDeleteArtist();
+  const { mutate: deleteMusic, isPending: isDeleting } = useDeleteMusic();
 
-  const handleEdit = ({ row }: GridRenderCellParams<IArtist, any>) => {
+  const handleEdit = ({ row }: GridRenderCellParams<IMusic, any>) => {
     setModalData(row);
     methods.reset({
-      name: row.name,
-      gender: row.gender,
-      dob: row.dob.toString(),
-      address: row.address,
-      first_release_year: row.first_release_year,
-      no_of_albums_released: row.no_of_albums_released.toString(),
+      title: row.title,
+      album_name: row.album_name,
+      genre: row.genre,
+      artist_id: row.artist_id,
       id: row.id,
     });
     setActiveModal("edit");
   };
 
-  const handleDelete = ({ row }: GridRenderCellParams<IArtist, any>) => {
+  const handleDelete = ({ row }: GridRenderCellParams<IMusic, any>) => {
     setModalData(row);
     setActiveModal("delete");
   };
@@ -56,7 +52,6 @@ export const ArtistPage = () => {
   };
 
   const columns = useColumns({ handleEdit, handleDelete });
-  const navigate = useNavigate();
 
   return (
     <>
@@ -82,9 +77,8 @@ export const ArtistPage = () => {
         rowCount={data?.meta.itemCount}
         setPage={setPage}
         isFetching={isLoading}
-        onRowClick={(params) => navigate(`/artist/${params.id}/music`)}
       />
-      <ArtistFormModal
+      <MusicFormModal
         open={activeModal === "add" || activeModal === "edit"}
         onClose={onClose}
         methods={methods}
@@ -96,7 +90,7 @@ export const ArtistPage = () => {
         onClose={onClose}
         title="Do you really want to delete this data?"
         isLoading={isDeleting}
-        handleAction={() => deleteArtist(modalData!.id)}
+        handleAction={() => deleteMusic(modalData!.id)}
       />
     </>
   );
