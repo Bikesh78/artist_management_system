@@ -16,10 +16,12 @@ import { GridRenderCellParams } from "@mui/x-data-grid";
 import { UpdateMusicInput, updateMusicSchema } from "./api/update-music";
 import { ConfirmationModal } from "src/components/ui/confirmation-modal";
 import { useDeleteMusic } from "./api/delete-music";
+import { useParams } from "react-router";
 
 export const MusicPage = () => {
+  const { artistId } = useParams();
   const [page, setPage] = useState(1);
-  const { data, isLoading } = useFetchMusics(page);
+  const { data, isLoading } = useFetchMusics(artistId, page);
   const [activeModal, setActiveModal] = useState<ActiveModal>("none");
   const [modalData, setModalData] = useState<IMusic | null>(null);
   const isEditMode = activeModal === "edit";
