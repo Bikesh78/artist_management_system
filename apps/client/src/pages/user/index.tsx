@@ -14,19 +14,24 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { UpdateUserInput, updateUserSchema } from "./api/update-user";
+import { ConfirmationModal } from "src/components/ui/confirmation-modal";
+import { useDeleteUser } from "./api/delete-user";
 
 export const UserPage = () => {
   const [page, setPage] = useState(1);
   const { data, isLoading } = useFetchUsers(page);
   const [activeModal, setActiveModal] = useState<ActiveModal>("none");
+  const [modalData, setModalData] = useState<IUser | null>(null);
   const isEditMode = activeModal === "edit";
   const methods = useForm<CreateUserInput | UpdateUserInput>({
     mode: "onBlur",
     defaultValues: defaultCreateUserFields,
     resolver: zodResolver(isEditMode ? updateUserSchema : createUserSchema),
   });
+  const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
 
   const handleEdit = ({ row }: GridRenderCellParams<IUser, any>) => {
+    setModalData(row);
     methods.reset({
       first_name: row.first_name,
       last_name: row.last_name,
@@ -40,7 +45,16 @@ export const UserPage = () => {
     setActiveModal("edit");
   };
 
-  const columns = useColumns({ handleEdit });
+  const handleDelete = ({ row }: GridRenderCellParams<IUser, any>) => {
+    setModalData(row);
+    setActiveModal("delete");
+  };
+  const onClose = () => {
+    setModalData(null);
+    setActiveModal("none");
+  };
+
+  const columns = useColumns({ handleEdit, handleDelete });
 
   return (
     <>
@@ -69,9 +83,17 @@ export const UserPage = () => {
       />
       <UserFormModal
         open={activeModal === "add" || activeModal === "edit"}
-        onClose={() => setActiveModal("none")}
+        onClose={onClose}
         methods={methods}
         isEditMode={isEditMode}
+      />
+
+      <ConfirmationModal
+        open={activeModal === "delete"}
+        onClose={onClose}
+        title="Do you really want to delete this data?"
+        isLoading={isDeleting}
+        handleAction={() => deleteUser(modalData!.id)}
       />
     </>
   );

@@ -9,10 +9,10 @@ import { ReactNode } from "react";
 interface Props {
   open: boolean;
   handleClose: () => void;
-  modalTitle: string;
   children: ReactNode;
+  modalTitle?: string;
   footer?: ReactNode;
-  width?: number;
+  width?: string;
 }
 
 export const CustomModal: React.FC<Props> = ({
@@ -27,13 +27,14 @@ export const CustomModal: React.FC<Props> = ({
     <>
       <Dialog
         onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
+        aria-labelledby={modalTitle}
         open={open}
-        sx={{ width }}
       >
-        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          {modalTitle}
-        </DialogTitle>
+        {modalTitle && (
+          <DialogTitle sx={{ m: 0, p: 2 }} id={modalTitle}>
+            {modalTitle}
+          </DialogTitle>
+        )}
         <IconButton
           aria-label="close"
           onClick={handleClose}
@@ -46,12 +47,10 @@ export const CustomModal: React.FC<Props> = ({
         >
           <CloseIcon />
         </IconButton>
-        <DialogContent dividers>{children}</DialogContent>
-        {footer && (
-          <DialogActions>
-            {footer}
-          </DialogActions>
-        )}
+        <DialogContent sx={{ width }} dividers>
+          {children}
+        </DialogContent>
+        {footer && <DialogActions>{footer}</DialogActions>}
       </Dialog>
     </>
   );

@@ -17,6 +17,8 @@ export const updateUserSchema = z.object({
   gender: z.enum(["m", "f", "o"]),
   address: z.string().optional(),
   id: z.number(),
+  password: z.string().optional(),
+  confirm_password: z.string().optional(),
 });
 
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;

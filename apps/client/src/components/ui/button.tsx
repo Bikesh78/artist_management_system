@@ -1,14 +1,13 @@
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
 import { MouseEvent, useState } from "react";
-import { GridRenderCellParams, GridValidRowModel } from "@mui/x-data-grid";
 
-interface Props<T extends GridValidRowModel> {
-  handleEdit: (params: GridRenderCellParams<T, any>) => void;
+interface Props {
+  handleEdit: () => void;
   handleDelete: () => void;
 }
 
-export const ActionButton = ({ handleEdit, handleDelete }: Props<T>) => {
+export const ActionButton = ({ handleEdit, handleDelete }: Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 

@@ -6,9 +6,10 @@ import { IUser } from "@libs/types";
 
 interface Props {
   handleEdit: (params: GridRenderCellParams<IUser, any>) => void;
+  handleDelete: (params: GridRenderCellParams<IUser, any>) => void;
 }
 
-export const useColumns = ({ handleEdit }: Props) => {
+export const useColumns = ({ handleEdit, handleDelete }: Props) => {
   const columns: GridColDef[] = useMemo(() => {
     return [
       {
@@ -70,7 +71,7 @@ export const useColumns = ({ handleEdit }: Props) => {
             <>
               <ActionButton
                 handleEdit={() => handleEdit(params)}
-                handleDelete={() => console.log("deleteModal", params?.row)}
+                handleDelete={() => handleDelete(params)}
               />
             </>
           );
