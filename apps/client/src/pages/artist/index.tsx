@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CustomTable } from "src/components/ui";
 import { useFetchArtists } from "./api/fetch-artists";
 import { useColumns } from "./columns";
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import { ActiveModal, IArtist } from "@libs/types";
 import { ArtistFormModal } from "./artist-form-modal";
 import { useForm } from "react-hook-form";
@@ -57,6 +57,10 @@ export const ArtistPage = () => {
 
   const columns = useColumns({ handleEdit, handleDelete });
   const navigate = useNavigate();
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
 
   return (
     <>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CustomTable } from "src/components/ui";
 import { useFetchUsers } from "./api/fetch-users";
 import { useColumns } from "./columns";
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import { ActiveModal, IUser } from "@libs/types";
 import { UserFormModal } from "./user-form-modal";
 import { useForm } from "react-hook-form";
@@ -55,6 +55,10 @@ export const UserPage = () => {
   };
 
   const columns = useColumns({ handleEdit, handleDelete });
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
 
   return (
     <>

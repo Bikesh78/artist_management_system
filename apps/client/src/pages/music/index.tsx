@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CustomTable } from "src/components/ui";
 import { useFetchMusics } from "./api/fetch-music";
 import { useColumns } from "./columns";
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import { ActiveModal, IMusic } from "@libs/types";
 import { MusicFormModal } from "./music-form-modal";
 import { useForm } from "react-hook-form";
@@ -16,10 +16,12 @@ import { GridRenderCellParams } from "@mui/x-data-grid";
 import { UpdateMusicInput, updateMusicSchema } from "./api/update-music";
 import { ConfirmationModal } from "src/components/ui/confirmation-modal";
 import { useDeleteMusic } from "./api/delete-music";
+import { useParams } from "react-router";
 
 export const MusicPage = () => {
+  const { artistId } = useParams();
   const [page, setPage] = useState(1);
-  const { data, isLoading } = useFetchMusics(page);
+  const { data, isLoading } = useFetchMusics(artistId, page);
   const [activeModal, setActiveModal] = useState<ActiveModal>("none");
   const [modalData, setModalData] = useState<IMusic | null>(null);
   const isEditMode = activeModal === "edit";
@@ -52,6 +54,10 @@ export const MusicPage = () => {
   };
 
   const columns = useColumns({ handleEdit, handleDelete });
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
 
   return (
     <>

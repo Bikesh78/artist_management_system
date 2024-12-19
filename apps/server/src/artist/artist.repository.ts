@@ -54,6 +54,7 @@ export class ArtistRepository {
       const queryText = `
       SELECT  *
       FROM artist
+      ORDER by created_at desc
       LIMIT $1
       OFFSET $2
       `;
@@ -87,6 +88,42 @@ export class ArtistRepository {
         return null;
       }
       return res.rows[0];
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    } finally {
+      client.release();
+    }
+  }
+
+  async findMusicByArtist(id: number, pageOptionsDto: PageOptionsDto) {
+    const { offset, limit } = pageOptionsDto;
+    const client = await this.pool.connect();
+    try {
+      //   const queryText = `
+      //   SELECT artist.id as artist_id, arist.name, music.id as music_id, music.title, music.album_name, music.genre
+      //   FROM artist
+      //   left join music on music.artist_id = artist.id
+      //   WHERE artist.id = $1
+      // `;
+      const queryText = `
+      select * 
+      from music 
+      WHERE music.artist_id = $3
+      ORDER BY created_at DESC
+      LIMIT $1
+      OFFSET $2
+      `;
+
+      const res = await client.query<IArtist>(queryText, [limit, offset, id]);
+      const count = await client.query<{ count: string }>(
+        `SELECT COUNT(*) FROM music where music.artist_id = $1`,
+        [id],
+      );
+
+      const itemCount = Number(count.rows[0].count);
+      const data = res.rows;
+      const pageMeta = new PageMetaDto({ itemCount, pageOptionsDto });
+      return new PageDto(data, pageMeta);
     } catch (err) {
       throw new InternalServerErrorException(err);
     } finally {
