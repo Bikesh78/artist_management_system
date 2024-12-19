@@ -3,14 +3,16 @@ import { CustomTable } from "src/components/ui";
 import { useFetchUsers } from "./api/fetch-users";
 import { useColumns } from "./columns";
 import { Box, Button } from "@mui/material";
+import { ActiveModal } from "@libs/types";
+import { UserFormModal } from "./user-form-modal";
 
-type ActiveModal = "none" | "add" | 'edit' | "delete"
 
 export const UserPage = () => {
   const [page, setPage] = useState(1);
   const { data, isFetching } = useFetchUsers(page);
   const columns = useColumns()
   const [activeModal, setActiveModal] = useState<ActiveModal>("none")
+  console.log("activeModal",activeModal)
 
   return (
     <>
@@ -35,6 +37,10 @@ export const UserPage = () => {
         rowCount={data?.meta.itemCount}
         setPage={setPage}
         isFetching={isFetching}
+      />
+      <UserFormModal
+      open={activeModal ==="add"}
+      handleClose={()=>setActiveModal('none')}
       />
     </>
   );

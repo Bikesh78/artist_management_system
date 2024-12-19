@@ -11,7 +11,8 @@ interface Props {
   handleClose: () => void;
   modalTitle: string;
   children: ReactNode;
-  footer: ReactNode;
+  footer?: ReactNode;
+  width?: number;
 }
 
 export const CustomModal: React.FC<Props> = ({
@@ -20,6 +21,7 @@ export const CustomModal: React.FC<Props> = ({
   modalTitle,
   children,
   footer,
+  width,
 }) => {
   return (
     <>
@@ -27,6 +29,7 @@ export const CustomModal: React.FC<Props> = ({
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        sx={{ width }}
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
           {modalTitle}
@@ -44,9 +47,11 @@ export const CustomModal: React.FC<Props> = ({
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>{children}</DialogContent>
-        <DialogActions>
-          {footer}
-        </DialogActions>
+        {footer && (
+          <DialogActions>
+            {footer}
+          </DialogActions>
+        )}
       </Dialog>
     </>
   );

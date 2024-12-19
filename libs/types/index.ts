@@ -71,3 +71,5 @@ export interface ResponseError {
     };
   };
 }
+
+export type ActiveModal = "none" | "add" | 'edit' | "delete";
