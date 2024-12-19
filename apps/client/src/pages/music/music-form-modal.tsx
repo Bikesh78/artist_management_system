@@ -8,7 +8,6 @@ import {
 } from "./api/create-music";
 import { UpdateMusicInput, useUpdateMusic } from "./api/update-music";
 import { useParams } from "react-router";
-import { useEffect } from "react";
 
 interface Props {
   open: boolean;
