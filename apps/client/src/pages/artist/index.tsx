@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CustomTable } from "src/components/ui";
 import { useFetchArtists } from "./api/fetch-artists";
 import { useColumns } from "./columns";
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { ActiveModal, IArtist } from "@libs/types";
 import { ArtistFormModal } from "./artist-form-modal";
 import { useForm } from "react-hook-form";
@@ -58,6 +58,10 @@ export const ArtistPage = () => {
   const columns = useColumns({ handleEdit, handleDelete });
   const navigate = useNavigate();
 
+  if (isLoading) {
+    return <CircularProgress />;
+  }
+
   return (
     <>
       <Box
@@ -65,10 +69,12 @@ export const ArtistPage = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          paddingBlock: "1rem"
         }}
       >
+        <Typography sx={{ fontWeight: 600, fontSize: "1.2rem" }}>Artist</Typography>
         <Button
-          sx={{ marginLeft: "auto" }}
+          sx={{ marginLeft: "auto", fontWeight: 500 }}
           variant="contained"
           onClick={() => setActiveModal("add")}
         >

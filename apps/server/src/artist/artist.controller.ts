@@ -15,7 +15,7 @@ import { UpdateArtistDto } from "./dto/update-artist.dto";
 
 @Controller("artist")
 export class ArtistController {
-  constructor(private artistService: ArtistService) {}
+  constructor(private artistService: ArtistService) { }
 
   @Post()
   create(@Body() body: CreateArtistDto) {
@@ -30,6 +30,14 @@ export class ArtistController {
   @Get(":id")
   findArtistById(@Param("id") id: number) {
     return this.artistService.findArtistById(id);
+  }
+
+  @Get(":id/music")
+  findMusicByArtist(
+    @Param("id") id: number,
+    @Query() pageOptionsDto: PageOptionsDto,
+  ) {
+    return this.artistService.findMusicByArtist(id, pageOptionsDto);
   }
 
   @Patch(":id")

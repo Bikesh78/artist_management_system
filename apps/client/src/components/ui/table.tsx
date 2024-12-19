@@ -93,7 +93,7 @@ export const CustomTable = ({
             quickFilterProps: { debounceMs: 500 },
           },
         }}
-        onRowClick={onRowClick}
+        onRowClick={ onRowClick}
       />
     </Box>
   );
