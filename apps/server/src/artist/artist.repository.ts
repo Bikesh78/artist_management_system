@@ -80,7 +80,7 @@ export class ArtistRepository {
     const client = await this.pool.connect();
     try {
       const queryText = `
-      SELECT  *
+      SELECT *
       FROM artist
       ORDER by created_at desc
       `;
@@ -117,12 +117,6 @@ export class ArtistRepository {
     const { offset, limit } = pageOptionsDto;
     const client = await this.pool.connect();
     try {
-      //   const queryText = `
-      //   SELECT artist.id as artist_id, arist.name, music.id as music_id, music.title, music.album_name, music.genre
-      //   FROM artist
-      //   left join music on music.artist_id = artist.id
-      //   WHERE artist.id = $1
-      // `;
       const queryText = `
       select * 
       from music 

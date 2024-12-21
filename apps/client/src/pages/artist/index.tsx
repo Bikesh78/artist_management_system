@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CustomTable, } from "src/components/ui";
+import { CustomTable } from "src/components/ui";
 import { useFetchArtists } from "./api/fetch-artists";
 import { useColumns } from "./columns";
 import { Box, Button, Typography } from "@mui/material";
@@ -18,6 +18,7 @@ import { ConfirmationModal } from "src/components/ui/confirmation-modal";
 import { useDeleteArtist } from "./api/delete-artist";
 import { useNavigate } from "react-router";
 import { handleDownload } from "src/utils/helper-functions";
+import { useImportArtist } from "./api/import-csv";
 
 export const ArtistPage = () => {
   const [page, setPage] = useState(1);
@@ -31,6 +32,7 @@ export const ArtistPage = () => {
     resolver: zodResolver(isEditMode ? updateArtistSchema : createArtistSchema),
   });
   const { mutate: deleteArtist, isPending: isDeleting } = useDeleteArtist();
+  const { mutate: importArtist } = useImportArtist();
 
   const handleEdit = ({ row }: GridRenderCellParams<IArtist, any>) => {
     setModalData(row);
@@ -55,6 +57,15 @@ export const ArtistPage = () => {
     setActiveModal("none");
   };
 
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formData = new FormData();
+    if (e.target.files) {
+      const file = e.target.files[0];
+      formData.append("file", file);
+    }
+    importArtist(formData);
+  };
+
   const columns = useColumns({ handleEdit, handleDelete });
   const navigate = useNavigate();
 
@@ -73,6 +84,16 @@ export const ArtistPage = () => {
         </Typography>
 
         <Box sx={{ display: "flex", gap: "0.5rem" }}>
+          <Button component="label" htmlFor="file" variant="contained">
+            Import
+            <input
+              id="file"
+              type="file"
+              hidden
+              accept="text/csv"
+              onChange={handleImport}
+            />
+          </Button>
           <Button
             sx={{ marginLeft: "auto", fontWeight: 500 }}
             variant="contained"

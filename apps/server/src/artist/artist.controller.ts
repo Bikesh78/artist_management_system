@@ -1,13 +1,19 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
+  FileTypeValidator,
   Get,
+  HttpStatus,
   Param,
+  ParseFilePipe,
   Patch,
   Post,
   Query,
   Res,
+  UploadedFile,
+  UseInterceptors,
 } from "@nestjs/common";
 import { ArtistService } from "./artist.service";
 import { CreateArtistDto } from "./dto/create-artist.dto";
@@ -15,6 +21,10 @@ import { PageOptionsDto } from "src/common/pagination/page-options.dto";
 import { UpdateArtistDto } from "./dto/update-artist.dto";
 import { Response } from "express";
 import { CsvService } from "src/csv/csv.service";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { parse } from "csv";
+import { plainToInstance } from "class-transformer";
+import { validate } from "class-validator";
 
 @Controller("artist")
 export class ArtistController {
@@ -35,7 +45,6 @@ export class ArtistController {
 
   @Get(":id")
   findArtistById(@Param("id") id: number) {
-    console.log("id", id);
     return this.artistService.findArtistById(id);
   }
 
@@ -65,5 +74,50 @@ export class ArtistController {
     const columns = Object.keys(artists[0]);
     const result = await this.csvService.exportCsv(artists, columns);
     result.pipe(res);
+  }
+
+  @Post("import")
+  @UseInterceptors(FileInterceptor("file"))
+  async importArtist(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new FileTypeValidator({ fileType: /.(csv)/ })],
+        fileIsRequired: true,
+        errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    const parser = parse(file.buffer, {
+      delimiter: ",",
+      trim: true,
+      columns: true,
+    });
+
+    for await (const record of parser) {
+      const {
+        name,
+        dob,
+        gender,
+        address,
+        first_release_year,
+        no_of_albums_released,
+      } = record;
+
+      const obj = plainToInstance(CreateArtistDto, record);
+      const errors = await validate(obj);
+      if (errors.length > 0) {
+        throw new BadRequestException("Invalid file");
+      }
+
+      await this.artistService.create({
+        name,
+        dob,
+        gender,
+        address,
+        first_release_year,
+        no_of_albums_released,
+      });
+    }
   }
 }

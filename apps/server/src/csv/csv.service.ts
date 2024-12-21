@@ -17,8 +17,9 @@ export class CsvService {
               context.column === "created_at" ||
               context.column === "updated_at"
             ) {
-              return date.toJSON();
+              return date.toISOString();
             }
+            return date.toISOString().slice(0, 10);
           },
         },
       });
