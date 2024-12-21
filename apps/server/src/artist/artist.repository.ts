@@ -80,7 +80,7 @@ export class ArtistRepository {
     const client = await this.pool.connect();
     try {
       const queryText = `
-      SELECT  *
+      SELECT *
       FROM artist
       ORDER by created_at desc
       `;

@@ -72,4 +72,4 @@ export interface ResponseError {
   };
 }
 
-export type ActiveModal = "none" | "add" | 'edit' | "delete";
+export type ActiveModal = "none" | "add" | "edit" | "delete";
