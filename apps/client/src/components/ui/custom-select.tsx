@@ -52,7 +52,7 @@ export const CustomSelect: React.FC<Props> = ({
           </Box>
         )}
 
-        <FormControl variant="outlined" sx={{width:"100%"}}>
+        <FormControl variant="outlined" sx={{ width: "100%" }}>
           <Controller
             name={name}
             control={control}

@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -22,9 +21,6 @@ import { UpdateArtistDto } from "./dto/update-artist.dto";
 import { Response } from "express";
 import { CsvService } from "src/csv/csv.service";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { parse } from "csv";
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
 
 @Controller("artist")
 export class ArtistController {
@@ -88,36 +84,6 @@ export class ArtistController {
     )
     file: Express.Multer.File,
   ) {
-    const parser = parse(file.buffer, {
-      delimiter: ",",
-      trim: true,
-      columns: true,
-    });
-
-    for await (const record of parser) {
-      const {
-        name,
-        dob,
-        gender,
-        address,
-        first_release_year,
-        no_of_albums_released,
-      } = record;
-
-      const obj = plainToInstance(CreateArtistDto, record);
-      const errors = await validate(obj);
-      if (errors.length > 0) {
-        throw new BadRequestException("Invalid file");
-      }
-
-      await this.artistService.create({
-        name,
-        dob,
-        gender,
-        address,
-        first_release_year,
-        no_of_albums_released,
-      });
-    }
+    await this.artistService.importCsv(file);
   }
 }

@@ -25,11 +25,7 @@ export const CustomModal: React.FC<Props> = ({
 }) => {
   return (
     <>
-      <Dialog
-        onClose={handleClose}
-        aria-labelledby={modalTitle}
-        open={open}
-      >
+      <Dialog onClose={handleClose} aria-labelledby={modalTitle} open={open}>
         {modalTitle && (
           <DialogTitle sx={{ m: 0, p: 2 }} id={modalTitle}>
             {modalTitle}

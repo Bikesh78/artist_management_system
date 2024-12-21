@@ -85,7 +85,7 @@ export const ArtistPage = () => {
 
         <Box sx={{ display: "flex", gap: "0.5rem" }}>
           <Button component="label" htmlFor="file" variant="contained">
-            Import
+            Import CSV
             <input
               id="file"
               type="file"

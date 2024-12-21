@@ -39,9 +39,7 @@ export const CustomDatePicker: React.FC<Props> = ({
           <>
             {label && (
               <Box sx={{ display: "flex", columnGap: "0.1rem", mb: "3px" }}>
-                <InputLabel htmlFor={name} sx={{ marginBottom: "3px" }}>
-                  {label}
-                </InputLabel>
+                <InputLabel htmlFor={name}>{label}</InputLabel>
                 <InputLabel style={{ color: "red" }}>
                   {required && " *"}
                 </InputLabel>

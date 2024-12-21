@@ -62,6 +62,7 @@ export const UserFormModal: React.FC<Props> = ({
       modalTitle={isEditMode ? "Edit User" : "Add User"}
       open={open}
       handleClose={handleClose}
+      width="500px"
       footer={
         <>
           <Button type="submit" variant="contained" form="user-form">
