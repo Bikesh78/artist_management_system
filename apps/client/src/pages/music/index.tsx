@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CustomTable } from "src/components/ui";
 import { useFetchMusics } from "./api/fetch-music";
 import { useColumns } from "./columns";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { ActiveModal, IMusic } from "@libs/types";
 import { MusicFormModal } from "./music-form-modal";
 import { useForm } from "react-hook-form";
@@ -55,10 +55,6 @@ export const MusicPage = () => {
 
   const columns = useColumns({ handleEdit, handleDelete });
 
-  if (isLoading) {
-    return <CircularProgress />;
-  }
-
   return (
     <>
       <Box
@@ -66,10 +62,12 @@ export const MusicPage = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          paddingBlock: "1rem"
+          paddingBlock: "1rem",
         }}
       >
-        <Typography sx={{ fontWeight: 600, fontSize: "1.2rem" }}>Music</Typography>
+        <Typography sx={{ fontWeight: 600, fontSize: "1.2rem" }}>
+          Music
+        </Typography>
         <Button
           sx={{ marginLeft: "auto", fontWeight: 500 }}
           variant="contained"

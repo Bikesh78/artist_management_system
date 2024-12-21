@@ -67,7 +67,25 @@ export class ArtistRepository {
       const itemCount = Number(count.rows[0].count);
       const data = res.rows;
       const pageMeta = new PageMetaDto({ itemCount, pageOptionsDto });
-      return new PageDto(data, pageMeta);
+      const result = new PageDto(data, pageMeta);
+      return result;
+    } catch (err) {
+      throw new InternalServerErrorException(err.message);
+    } finally {
+      client.release();
+    }
+  }
+
+  async getAllArtist() {
+    const client = await this.pool.connect();
+    try {
+      const queryText = `
+      SELECT  *
+      FROM artist
+      ORDER by created_at desc
+      `;
+      const res = await client.query<IArtist>(queryText);
+      return res.rows;
     } catch (err) {
       throw new InternalServerErrorException(err.message);
     } finally {

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { CustomTable } from "src/components/ui";
+import { CustomTable, } from "src/components/ui";
 import { useFetchArtists } from "./api/fetch-artists";
 import { useColumns } from "./columns";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { ActiveModal, IArtist } from "@libs/types";
 import { ArtistFormModal } from "./artist-form-modal";
 import { useForm } from "react-hook-form";
@@ -17,8 +17,8 @@ import { UpdateArtistInput, updateArtistSchema } from "./api/update-artist";
 import { ConfirmationModal } from "src/components/ui/confirmation-modal";
 import { useDeleteArtist } from "./api/delete-artist";
 import { useNavigate } from "react-router";
+import { handleDownload } from "src/utils/helper-functions";
 
-//TODO: add csv import and export
 export const ArtistPage = () => {
   const [page, setPage] = useState(1);
   const { data, isLoading } = useFetchArtists(page);
@@ -58,10 +58,6 @@ export const ArtistPage = () => {
   const columns = useColumns({ handleEdit, handleDelete });
   const navigate = useNavigate();
 
-  if (isLoading) {
-    return <CircularProgress />;
-  }
-
   return (
     <>
       <Box
@@ -69,17 +65,31 @@ export const ArtistPage = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          paddingBlock: "1rem"
+          paddingBlock: "1rem",
         }}
       >
-        <Typography sx={{ fontWeight: 600, fontSize: "1.2rem" }}>Artist</Typography>
-        <Button
-          sx={{ marginLeft: "auto", fontWeight: 500 }}
-          variant="contained"
-          onClick={() => setActiveModal("add")}
-        >
-          Add
-        </Button>
+        <Typography sx={{ fontWeight: 600, fontSize: "1.2rem" }}>
+          Artist
+        </Typography>
+
+        <Box sx={{ display: "flex", gap: "0.5rem" }}>
+          <Button
+            sx={{ marginLeft: "auto", fontWeight: 500 }}
+            variant="contained"
+            color="info"
+            type="submit"
+            onClick={() => handleDownload(`/artist/export/all`, "artist.csv")}
+          >
+            Export CSV
+          </Button>
+          <Button
+            sx={{ marginLeft: "auto", fontWeight: 500 }}
+            variant="contained"
+            onClick={() => setActiveModal("add")}
+          >
+            Add
+          </Button>
+        </Box>
       </Box>
 
       <CustomTable

@@ -20,6 +20,10 @@ export class ArtistService {
     return await this.artistRepository.getPaginatedArtists(pageOptionsDto);
   }
 
+  async getAllArtists(){
+    return await this.artistRepository.getAllArtist()
+  }
+
   async findArtistById(id: number) {
     const artist = await this.artistRepository.findArtistById(id);
     if (!artist) {

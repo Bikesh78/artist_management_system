@@ -33,7 +33,7 @@ export const CustomTable = ({
     if (setPage) {
       setPage(() => paginationModel.page + 1);
     }
-  }, [paginationModel, setPage]);
+  }, [paginationModel.page, setPage]);
 
   return (
     <Box
@@ -93,7 +93,7 @@ export const CustomTable = ({
             quickFilterProps: { debounceMs: 500 },
           },
         }}
-        onRowClick={ onRowClick}
+        onRowClick={onRowClick}
       />
     </Box>
   );

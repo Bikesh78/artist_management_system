@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CustomTable } from "src/components/ui";
 import { useFetchUsers } from "./api/fetch-users";
 import { useColumns } from "./columns";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { ActiveModal, IUser } from "@libs/types";
 import { UserFormModal } from "./user-form-modal";
 import { useForm } from "react-hook-form";
@@ -56,10 +56,6 @@ export const UserPage = () => {
 
   const columns = useColumns({ handleEdit, handleDelete });
 
-  if (isLoading) {
-    return <CircularProgress />;
-  }
-
   return (
     <>
       <Box
@@ -67,10 +63,12 @@ export const UserPage = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          paddingBlock: "1rem"
+          paddingBlock: "1rem",
         }}
       >
-        <Typography sx={{ fontWeight: 600, fontSize: "1.2rem" }}>Users</Typography>
+        <Typography sx={{ fontWeight: 600, fontSize: "1.2rem" }}>
+          Users
+        </Typography>
         <Button
           sx={{ marginLeft: "auto", fontWeight: 500 }}
           variant="contained"
